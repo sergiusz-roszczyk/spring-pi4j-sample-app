@@ -1,6 +1,8 @@
 package com.roszczyk.pi4jexample;
 
 import com.roszczyk.pi4jexample.beans.SampleHelloBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SampleApp {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger( SampleApp.class );
     @Autowired
     private SampleHelloBean sampleHelloBean;
     @Autowired
@@ -35,7 +38,7 @@ public class SampleApp {
     }
 
     private void shutdown() {
-        System.out.println( System.getProperty( "line.separator" ) + "Odebrano sygnał zamknięcia aplikacji." );
+        LOGGER.info( "Odebrano sygnał zamknięcia aplikacji." );
         // tu można zwolnić zasoby
         System.out.println( "Aplikacja zakończona." );
     }
