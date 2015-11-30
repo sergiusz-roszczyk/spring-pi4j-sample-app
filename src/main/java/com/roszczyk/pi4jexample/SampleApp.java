@@ -1,6 +1,6 @@
-package com.roszczyk.sssa;
+package com.roszczyk.pi4jexample;
 
-import com.roszczyk.sssa.beans.SampleHelloBean;
+import com.roszczyk.pi4jexample.beans.SampleHelloBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

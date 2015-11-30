@@ -1,7 +1,7 @@
-package com.roszczyk.sssa.main;
+package com.roszczyk.pi4jexample.main;
 
-import com.roszczyk.sssa.SampleApp;
-import com.roszczyk.sssa.config.AppConfig;
+import com.roszczyk.pi4jexample.SampleApp;
+import com.roszczyk.pi4jexample.config.AppConfig;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 

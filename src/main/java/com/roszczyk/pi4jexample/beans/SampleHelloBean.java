@@ -1,4 +1,4 @@
-package com.roszczyk.sssa.beans;
+package com.roszczyk.pi4jexample.beans;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

@@ -62,7 +62,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.roszczyk.sssa.main.SampleAppMain</mainClass>
+                            <mainClass>com.roszczyk.pi4jexample.main.SampleAppMain</mainClass>
                         </manifest>
                     </archive>
                     <appendAssemblyId>false</appendAssemblyId>
