@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.roszczyk</groupId>
-    <artifactId>spring-simple-standalone-app</artifactId>
+    <artifactId>spring-pi4j-sample-app</artifactId>
     <version>1.0</version>
     <name>${artifactId}</name>
 
