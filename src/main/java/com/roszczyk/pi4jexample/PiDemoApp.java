@@ -5,6 +5,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import com.roszczyk.pi4jexample.beans.HardwareController;
+import com.roszczyk.pi4jexample.beans.SystemLeds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class PiDemoApp {
     private static final Logger LOGGER = LoggerFactory.getLogger( PiDemoApp.class );
     private static final int PWM_MAX = 1023;
     private static final int PWM_LOW = 0;
-    private static final int PWM_STEP = 50;
+    private static final int PWM_STEP = 100;
     private static final int FADE_OUT_DELAY_SECONDS = 10;
     volatile private boolean isMotion;
     volatile private int pwmLevel;
@@ -37,13 +38,13 @@ public class PiDemoApp {
 
         while ( true ) {
             if ( secondsSinceLastMotion > FADE_OUT_DELAY_SECONDS && targetPwmLevel != PWM_LOW ) {
-                setPwmLevel( PWM_LOW );
+                setTargetPwmLevel( PWM_LOW );
             }
             Thread.sleep( 500 );
         }
     }
 
-    @Scheduled(fixedDelay = 40)
+    @Scheduled(fixedDelay = 80)
     private void updatePwmLevel() {
         if ( Math.abs( targetPwmLevel - pwmLevel ) < PWM_STEP ) {
             pwmLevel = targetPwmLevel;
@@ -61,23 +62,24 @@ public class PiDemoApp {
         hardwareController.setPwm( pwmLevel );
     }
 
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = 2000)
     private void heartbeatAction() {
-        hardwareController.pulseShort();
+        hardwareController.pulseShort( SystemLeds.STATUS_LED);
+        printStatus();
     }
 
     @Scheduled(fixedDelay = 1000, initialDelay = 1000)
     private void secondsTicks() {
         if ( isMotion ) {
-            secondsSinceLastMotion = 0;
+            clearLastMotionCounter();
         } else {
             secondsSinceLastMotion++;
         }
     }
 
     private void setupMotionDetector( GpioPinDigitalInput sensorInput ) {
-        isMotion = false;
-        secondsSinceLastMotion = 0;
+        setMotion( false );
+        clearLastMotionCounter();
         sensorInput.addListener( new GpioPinListenerDigital() {
             @Override
             public void handleGpioPinDigitalStateChangeEvent( GpioPinDigitalStateChangeEvent gpioPinDigitalStateChangeEvent ) {
@@ -92,20 +94,37 @@ public class PiDemoApp {
 
     private void motionDetectedAction() {
         LOGGER.info( String.format( "%s - wykryto ruch", Instant.now() ) );
+        clearLastMotionCounter();
         setMotion( true );
-        hardwareController.pulseLong();
-        setPwmLevel( PWM_MAX );
+        hardwareController.on(SystemLeds.MOTION_LED);
+        setTargetPwmLevel( PWM_MAX );
     }
 
     private void motionOutAction() {
         setMotion( false );
+        hardwareController.off( SystemLeds.MOTION_LED );
     }
 
-    private void setPwmLevel( int pwmLevel ) {
+    private void setTargetPwmLevel( int pwmLevel ) {
         this.targetPwmLevel = pwmLevel;
     }
 
-    public void setMotion( boolean motion ) {
+    private void setMotion( boolean motion ) {
         isMotion = motion;
+    }
+
+    private void clearLastMotionCounter() {
+        secondsSinceLastMotion = 0;
+    }
+
+    private void printStatus() {
+        LOGGER.info(
+                String.format( "%s - pwmLevel: %d, targetPwmLevel: %d, secondsSinceLastMotion: %d, isMotion: %s",
+                        Instant.now(),
+                        pwmLevel,
+                        targetPwmLevel,
+                        secondsSinceLastMotion,
+                        isMotion)
+        );
     }
 }

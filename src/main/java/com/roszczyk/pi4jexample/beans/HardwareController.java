@@ -6,9 +6,13 @@ public interface HardwareController {
 
     GpioPinDigitalInput getSensorInput();
 
-    void pulseShort();
+    void pulseShort( SystemLeds led );
 
-    void pulseLong();
+    void pulseLong( SystemLeds led );
+
+    void on(SystemLeds led);
+
+    void off(SystemLeds led);
 
     void setPwm( int level );
 
